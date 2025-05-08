@@ -1,0 +1,11 @@
+{
+  "item.minecraft.potion.effect.draconic": "Draconic Potion",
+  "item.minecraft.splash_potion.effect.draconic": "Draconic Splash Potion",
+  "item.minecraft.lingering_potion.effect.draconic": "Draconic Lingering Potion",
+  "item.minecraft.tipped_arrow.effect.draconic": "Tipped Arrow",
+  "effect.dragonpotions.minify": "Dragon Minification",
+  "item.minecraft.potion.effect.minify": "Potion of Dragon Minification",
+  "item.minecraft.splash_potion.effect.minify": "Splash Potion of Dragon Minification",
+  "item.minecraft.lingering_potion.effect.minify": "Lingering Potion of Dragon Minification",
+  "item.minecraft.tipped_arrow.effect.minify": "Arrow of Dragon Minification"
+}
