@@ -1,48 +1,32 @@
 package mods.grissess.dragonpotions;
 
+import org.slf4j.Logger;
+
 import com.mojang.logging.LogUtils;
 
 import by.dragonsurvivalteam.dragonsurvival.registry.DSItems;
 import mods.grissess.dragonpotions.effect.MinifyEffect;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.config.ModConfig.Type;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(DragonPotions.MODID)
@@ -70,7 +54,7 @@ public class DragonPotions
     );
     
     public DragonPotions() {
-    	LOGGER.info("DP: new");
+    	LOGGER.info("Hello from Dragon Potions!  - Grissess :D");
     	IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
     	MOB_EFFECTS.register(modbus);
     	POTIONS.register(modbus);
@@ -81,12 +65,10 @@ public class DragonPotions
     
     @SubscribeEvent
     public void setup(FMLCommonSetupEvent event) {
-    	LOGGER.info("DP: CommonSetup");
     	event.enqueueWork(this::registerBrewing);
     }
     
     public void registerBrewing() {
-    	LOGGER.info("DP: registerBrewing");
     	BrewingRecipeRegistry.addRecipe(
     			Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)),
     			Ingredient.of(DSItems.elderDragonDust),

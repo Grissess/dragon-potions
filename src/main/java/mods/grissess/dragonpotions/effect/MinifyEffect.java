@@ -2,6 +2,7 @@ package mods.grissess.dragonpotions.effect;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import by.dragonsurvivalteam.dragonsurvival.common.capability.DragonStateHandler;
@@ -10,6 +11,7 @@ import by.dragonsurvivalteam.dragonsurvival.network.player.SyncSize;
 import by.dragonsurvivalteam.dragonsurvival.util.DragonUtils;
 import mods.grissess.dragonpotions.Config;
 import mods.grissess.dragonpotions.DragonPotions;
+import mods.grissess.dragonpotions.data.PlayerAttachedData;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,8 +24,6 @@ import net.minecraftforge.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(modid = DragonPotions.MODID)
 public class MinifyEffect extends MobEffect {
-	protected static Map<UUID, Double> originalSizes = new HashMap<UUID, Double>();  // TODO: serialize
-	
 	public MinifyEffect(MobEffectCategory cat, int color) {
 		super(cat, color);
 	}
@@ -66,25 +66,26 @@ public class MinifyEffect extends MobEffect {
 	}
 	
 	public static void startEffect(Player ply, DragonStateHandler dragon) {
-		DragonPotions.LOGGER.info("Starting effect for {}", ply);
-		if(!originalSizes.containsKey(ply.getUUID()))  // don't overwrite a previous saved size if we begin again
-			originalSizes.put(ply.getUUID(), dragon.getSize());
+		PlayerAttachedData.get(ply.getServer()).updateDatum(ply, (datum) -> {
+			if(datum.originalSize.isEmpty()) datum.originalSize = Optional.of(dragon.getSize());
+		});
 		setSize(ply, dragon, Config.minifySize);
 	}
 	
 	public static void tryEndEffect(LivingEntity ent) {
 		if(!(ent instanceof Player)) return;
 		Player ply = (Player) ent;
-		if(!originalSizes.containsKey(ply.getUUID())) return;
+		if(PlayerAttachedData.get(ply.getServer()).getDatum(ply).originalSize.isEmpty()) return;
 		DragonStateHandler dragon = DragonUtils.getHandler(ply);
 		if(!dragon.isDragon()) return;
 		endEffect(ply, dragon);
 	}
 	
 	public static void endEffect(Player ply, DragonStateHandler dragon) {
-		DragonPotions.LOGGER.info("Ending effect for {}", ply);
-		setSize(ply, dragon, originalSizes.getOrDefault(ply.getUUID(), Config.minifySize));
-		originalSizes.remove(ply.getUUID());  // enable another size to be stored after effect end
+		PlayerAttachedData data = PlayerAttachedData.get(ply.getServer());
+		double size = data.getDatum(ply).originalSize.orElse(Config.minifySize);
+		data.updateDatum(ply, (datum) -> datum.originalSize = Optional.empty());
+		setSize(ply, dragon, size);
 	}
 	
 	public static void setSize(Player ply, DragonStateHandler dragon, double size) {
