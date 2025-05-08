@@ -21,7 +21,17 @@ group = mod_group_id
 repositories {
     mavenLocal()
     flatDir {
-    	dirs "libs"
+        dirs "libs"
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
+        }
     }
 }
 
@@ -144,7 +154,7 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    modCompileOnly "blank:dragonsurvival-1.20.1:13.04.2025-all"
+    modImplementation "curse.maven:dragon-survival-420799:6420793"
 }
 
 // Uncomment the lines below if you wish to configure mixin. The mixin file should be named modid.mixins.json.
